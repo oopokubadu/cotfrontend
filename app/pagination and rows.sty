@@ -1,0 +1,152 @@
+export default function Dashboard() {
+  const [currency, setCurrency] = useState("EUR")
+  const [date, setDate] = useState({
+    from: new Date(new Date().setDate(new Date().getDate() - 30)),
+    to: new Date(),
+  } as DateRange)
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [lastUpdated, setLastUpdated] = useState(new Date())
+  const [currentPage, setCurrentPage] = useState(1) // Current page
+  const [rowsPerPage, setRowsPerPage] = useState(10) // Rows per page
+
+  // Calculate total pages
+  const totalPages = Math.ceil(data.length / rowsPerPage)
+
+  // Get the current slice of data
+  const paginatedData = data.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  )
+
+  const fetchData = async () => {
+    setLoading(true)
+    const getProductName = (currency: string): string => {
+      const productMap: { [key: string]: string } = {
+        EUR: "EURO%20FX%20-%20CHICAGO%20MERCANTILE%20EXCHANGE",
+        GBP: "BRITISH%20POUND%20-%20CHICAGO%20MERCANTILE%20EXCHANGE",
+        USD: "US%20DOLLAR%20INDEX%20-%20ICE%20FUTURES%20US",
+        JPY: "JAPANESE%20YEN%20-%20CHICAGO%20MERCANTILE%20EXCHANGE",
+        CHF: "SWISS%20FRANC%20-%20CHICAGO%20MERCANTILE%20EXCHANGE",
+        CAD: "CANADIAN%20DOLLAR%20-%20CHICAGO%20MERCANTILE%20EXCHANGE",
+      }
+
+      return productMap[currency] || "UNKNOWN%20PRODUCT"
+    }
+
+    try {
+      // Extract and format dates
+      const startDate = format(date.from ?? new Date(), "yyyy-MM-dd")
+      const endDate = format(date.to ?? new Date(), "yyyy-MM-dd")
+
+      // Extract years from the date range
+      const beginYear = (date.from ?? new Date()).getFullYear()
+      const endYear = (date.to ?? new Date()).getFullYear()
+
+      // Construct the API URL
+      const product = getProductName(currency)
+      const apiUrl = `https://cot-qnjy.onrender.com/cot_data?start_date=${startDate}&end_date=${endDate}&begin_year=${beginYear}&end_year=${endYear}&product=${product}`
+
+      // Fetch data from the API
+      const response = await fetch(apiUrl)
+      if (!response.ok) {
+        throw new Error("Failed to fetch data")
+      }
+
+      const apiData = await response.json()
+
+      // Map the API data to match the required fields
+      const mappedData = apiData.map((item: any) => ({
+        changeLong: item.change_long,
+        changeShort: item.change_short,
+        date: item.date,
+        longs: Number(item.long),
+        netPosition: item.net_position,
+        percentLong: item["pct-long"],
+        percentShort: item["pct-short"],
+        shorts: Number(item.short),
+      }))
+
+      setData(mappedData)
+      setLastUpdated(new Date())
+    } catch (error) {
+      console.error("Error fetching data:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage)
+  }
+
+  const handleRowsPerPageChange = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage)
+    setCurrentPage(1) // Reset to the first page when rows per page changes
+  }
+
+  return (
+    <div className="container mx-auto p-4 min-h-screen bg-background">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <h1 className="text-2xl font-bold">Commitment of Traders Dashboard</h1>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>Last updated: {format(lastUpdated, "MMM d, yyyy HH:mm")}</span>
+            <Button variant="outline" size="icon" onClick={fetchData} title="Refresh data">
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex justify-between items-center">
+              <CardTitle>COT Data</CardTitle>
+              <div className="flex gap-2">
+                <select
+                  value={rowsPerPage}
+                  onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
+                  className="border rounded px-2 py-1 text-sm"
+                >
+                  <option value={5}>5 rows</option>
+                  <option value={10}>10 rows</option>
+                  <option value={20}>20 rows</option>
+                </select>
+                <Button variant="outline" size="sm" onClick={fetchData} disabled={loading || !data.length}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export CSV
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <TooltipProvider>
+              <DataTable data={paginatedData} loading={loading} />
+            </TooltipProvider>
+            <div className="flex justify-between items-center mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
