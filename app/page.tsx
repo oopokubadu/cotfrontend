@@ -145,6 +145,7 @@ export default function Dashboard() {
                     <SelectItem value="USD">USD (US Dollar)</SelectItem>
                     <SelectItem value="JPY">JPY (Japanese Yen)</SelectItem>
                     <SelectItem value="CHF">CHF (Swiss Franc)</SelectItem>
+                    <SelectItem value="CAD">CAD (Canadian Dollar)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
