@@ -147,8 +147,8 @@ export default function Dashboard() {
                     <SelectItem value="JPY">JPY (Japanese Yen)</SelectItem>
                     <SelectItem value="CHF">CHF (Swiss Franc)</SelectItem>
                     <SelectItem value="CAD">CAD (Canadian Dollar)</SelectItem>
-                    <SelectItem value="AUD">AUD (Swiss Franc)</SelectItem>
-                    <SelectItem value="NZD">NZD (Canadian Dollar)</SelectItem>
+                    <SelectItem value="AUD">AUD (Australian Dollar)</SelectItem>
+                    <SelectItem value="NZD">NZD (New Zealand Dollar)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
