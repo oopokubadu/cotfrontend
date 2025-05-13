@@ -30,7 +30,6 @@ export default function Dashboard() {
   useEffect(() => {
     fetchData()
   }, [currency, date])
-  
 
   const fetchData = async () => {
     setLoading(true)
@@ -42,7 +41,9 @@ export default function Dashboard() {
         JPY: "JAPANESE%20YEN%20-%20CHICAGO%20MERCANTILE%20EXCHANGE",
         CHF: "SWISS%20FRANC%20-%20CHICAGO%20MERCANTILE%20EXCHANGE",
         CAD: "CANADIAN%20DOLLAR%20-%20CHICAGO%20MERCANTILE%20EXCHANGE",
-      }
+        AUD: "AUSTRALIAN%20DOLLAR%20-%20CHICAGO%20MERCANTILE%20EXCHANGE",
+        NZD: "NEW%20ZEALAND%20DOLLAR%20-%20CHICAGO%20MERCANTILE%20EXCHANGE"
+    };
     
       return productMap[currency] || "UNKNOWN%20PRODUCT"
     }
@@ -146,6 +147,8 @@ export default function Dashboard() {
                     <SelectItem value="JPY">JPY (Japanese Yen)</SelectItem>
                     <SelectItem value="CHF">CHF (Swiss Franc)</SelectItem>
                     <SelectItem value="CAD">CAD (Canadian Dollar)</SelectItem>
+                    <SelectItem value="AUD">AUD (Swiss Franc)</SelectItem>
+                    <SelectItem value="NZD">NZD (Canadian Dollar)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
