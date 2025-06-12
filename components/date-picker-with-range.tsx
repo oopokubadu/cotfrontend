@@ -42,12 +42,12 @@ export function DatePickerWithRange({ date, setDate, className }: DatePickerWith
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
+            initialFocus
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={(selected) => selected && setDate(selected)}
+            onSelect={setDate}
             numberOfMonths={2}
-            required={false}
           />
         </PopoverContent>
       </Popover>
