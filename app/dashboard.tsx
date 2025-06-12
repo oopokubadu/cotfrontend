@@ -254,10 +254,10 @@ export default function Dashboard() {
                     <label className="text-sm font-medium block">Time Range</label>
                     <Tabs value={timeRangeTab} onValueChange={handleTimeRangeChange} className="w-full">
                       <TabsList className="grid grid-cols-5 w-full">
-                        <TabsTrigger value="1M">1M</TabsTrigger>
+                        {/* <TabsTrigger value="1M">1M</TabsTrigger>
                         <TabsTrigger value="3M">3M</TabsTrigger>
                         <TabsTrigger value="6M">6M</TabsTrigger>
-                        <TabsTrigger value="1Y">1Y</TabsTrigger>
+                        <TabsTrigger value="1Y">1Y</TabsTrigger> */}
                         <TabsTrigger value="YTD">YTD</TabsTrigger>
                       </TabsList>
                     </Tabs>
