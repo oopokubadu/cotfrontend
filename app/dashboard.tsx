@@ -211,6 +211,7 @@ export default function Dashboard() {
                         <SelectItem value="AUD">AUD (Australian Dollar)</SelectItem>
                         <SelectItem value="CAD">CAD (Canadian Dollar)</SelectItem>
                         <SelectItem value="NZD">NZD (New Zealand Dollar)</SelectItem>
+                        <SelectItem value="XAU">XAU (Gold)</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -245,6 +246,9 @@ export default function Dashboard() {
                           </SelectItem>
                           <SelectItem value="NZD" disabled={currency === "NZD"}>
                             NZD (New Zealand Dollar)
+                          </SelectItem>
+                          <SelectItem value="XAU" disabled={currency === "XAU"}>
+                            XAU (New Zealand Dollar)
                           </SelectItem>
                         </SelectContent>
                       </Select>
